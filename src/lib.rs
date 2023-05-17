@@ -17,6 +17,7 @@ pub extern crate group;
 
 #[cfg(test)]
 pub mod tests;
+pub mod utils;
 
 #[cfg(all(feature = "prefetch", target_arch = "x86_64"))]
 #[inline(always)]

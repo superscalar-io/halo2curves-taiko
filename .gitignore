@@ -2,4 +2,7 @@
 Cargo.lock
 **/*.rs.bk
 .vscode
+.idea
 **/*.html
+
+**/*.bin
