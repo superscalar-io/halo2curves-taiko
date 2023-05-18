@@ -254,6 +254,16 @@ macro_rules! field_common {
 
                 u128::from(tmp.0[0]) | (u128::from(tmp.0[1]) << 64)
             }
+
+            // convert to raw bytes(without montgomery)
+            fn convert_to_bytes(&self) -> [u8; 32] {
+                <Self as ff::PrimeField>::to_repr_without_montgomery(self)
+            }
+
+            // convert field from bytes(without montgomery)
+            fn convert_from_bytes(bytes: &[u8; 32]) -> Self {
+                <Self as ff::PrimeField>::from_repr_without_montgomery(*bytes).unwrap()
+            }
         }
     };
 }

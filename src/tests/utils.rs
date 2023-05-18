@@ -1,9 +1,10 @@
 #[cfg(test)]
 mod test {
     use crate::bn256::{Fq, Fr};
-    use crate::utils::{read_field_from_file, write_field_into_file, ConvertToBytes};
+    use crate::utils::{read_field_from_file, write_field_into_file};
     use std::fs::File;
     use std::io::{stdout, Read, Write};
+    use pasta_curves::arithmetic::FieldExt;
 
     const fr_file_name: &str = "./fr_test_file.bin";
     const fq_file_name: &str = "./fq_test_file.bin";
@@ -45,5 +46,6 @@ mod test {
         let fq: Fq = read_field_from_file(fq_file_name);
         println!("{:?}", fq.0);
         println!("{:?}", fq);
+        println!("{:?}", fq.convert_to_bytes());
     }
 }

@@ -267,6 +267,26 @@ impl ff::PrimeField for Fq {
     fn root_of_unity() -> Self {
         unimplemented!()
     }
+
+    fn to_repr_without_montgomery(&self) -> Self::Repr {
+        let mut res = [0; 32];
+        res[0..8].copy_from_slice(&self.0[0].to_le_bytes());
+        res[8..16].copy_from_slice(&self.0[1].to_le_bytes());
+        res[16..24].copy_from_slice(&self.0[2].to_le_bytes());
+        res[24..32].copy_from_slice(&self.0[3].to_le_bytes());
+
+        res
+    }
+
+    fn from_repr_without_montgomery(repr: Self::Repr) -> Option<Self> {
+        let mut tmp = Self([0, 0, 0, 0]);
+
+        tmp.0[0] = u64::from_le_bytes(repr[0..8].try_into().unwrap());
+        tmp.0[1] = u64::from_le_bytes(repr[8..16].try_into().unwrap());
+        tmp.0[2] = u64::from_le_bytes(repr[16..24].try_into().unwrap());
+        tmp.0[3] = u64::from_le_bytes(repr[24..32].try_into().unwrap());
+        Some(tmp)
+    }
 }
 
 impl SqrtRatio for Fq {
@@ -280,29 +300,6 @@ impl SqrtRatio for Fq {
         let tmp = Fq::montgomery_reduce(&[self.0[0], self.0[1], self.0[2], self.0[3], 0, 0, 0, 0]);
 
         tmp.0[0] as u32
-    }
-}
-
-use crate::utils::ConvertToBytes;
-impl ConvertToBytes for Fq {
-    fn convert_to_bytes(&self) -> [u8; 32] {
-        let mut res = [0; 32];
-        res[0..8].copy_from_slice(&self.0[0].to_le_bytes());
-        res[8..16].copy_from_slice(&self.0[1].to_le_bytes());
-        res[16..24].copy_from_slice(&self.0[2].to_le_bytes());
-        res[24..32].copy_from_slice(&self.0[3].to_le_bytes());
-
-        res
-    }
-
-    fn convert_from_bytes(bytes: &[u8; 32]) -> Self {
-        let mut tmp = Self([0, 0, 0, 0]);
-
-        tmp.0[0] = u64::from_le_bytes(bytes[0..8].try_into().unwrap());
-        tmp.0[1] = u64::from_le_bytes(bytes[8..16].try_into().unwrap());
-        tmp.0[2] = u64::from_le_bytes(bytes[16..24].try_into().unwrap());
-        tmp.0[3] = u64::from_le_bytes(bytes[24..32].try_into().unwrap());
-        tmp
     }
 }
 
