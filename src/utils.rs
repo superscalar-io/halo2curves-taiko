@@ -1,7 +1,8 @@
 use std::fs;
 use std::fs::File;
 use std::io::{Read, Seek, Write};
-use pasta_curves::arithmetic::FieldExt;
+
+pub use pasta_curves::arithmetic::FieldExt;
 
 /// used to dump data for pre-compute
 pub trait ConvertToBytes {
